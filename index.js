@@ -6,7 +6,7 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
-const interval = 1000 * 60; // 1 minute
+const interval = 1000 * 30; // 1 minute
 const district_id = process.env.DISTRIC_ID;
 const db_url = process.env.FIREBASE_REALTIME_DB_URL;
 
@@ -104,7 +104,7 @@ const startPolling = async() => {
                 (x) => x.center_id === center.center_id
             );
             if (!matchedCenter) {
-                output.push(matchedCenter);
+                output.push(center);
             } else if (
                 matchedCenter.available_capacity !== center.available_capacity
             ) {
@@ -132,30 +132,34 @@ const pingServer = () => {
     const awake = async() => {
         try {
             await fetch(PING_URL);
-            console.log('ping done');
+            console.log("ping done");
             setTimeout(awake, PING_INTERVAL);
         } catch (err) {
-            debug(err);
             setTimeout(awake, PING_INTERVAL);
         }
     };
 
     setTimeout(awake, 0);
-}
+};
 
 (async() => {
     const app = express();
 
     const port = process.env.PORT || 8080;
 
-    try {
-        await startPolling();
-        setTimeout(startPolling, interval);
-    } catch (err) {
-        console.log("Error occured", err);
-    }
+    const polling = async() => {
+        try {
+            await startPolling();
+            setTimeout(polling, interval);
+        } catch (err) {
+            console.log(err);
+            setTimeout(polling, interval);
+        }
+    };
 
-    pingServer()
+    await polling();
+
+    // pingServer()
 
     app.listen(port, () => {
         console.log(`Service is started  on port ${port}`);
