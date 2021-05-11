@@ -1,0 +1,21 @@
+{
+    "name": "cowin_bot",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "install": "npm install",
+        "start": "nodemon index.js"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "dotenv": "^9.0.2",
+        "express": "^4.17.1",
+        "messaging-api-telegram": "^1.0.4",
+        "moment-timezone": "^0.5.33",
+        "node-fetch": "^2.6.1",
+        "nodemon": "^2.0.7"
+    }
+}
